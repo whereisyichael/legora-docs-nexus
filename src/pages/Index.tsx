@@ -186,7 +186,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="pt-32">
         <SidebarGroup>
           <div className="px-2 py-2 border-b">
             <Button 
