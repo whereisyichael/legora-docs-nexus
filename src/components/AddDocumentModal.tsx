@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Upload, Scan, FolderOpen, X } from 'lucide-react';
+import { Upload, Scan, FolderOpen, X, Cloud, Building2, Link, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -68,6 +68,21 @@ const AddDocumentModal = ({ isOpen, onClose }: AddDocumentModalProps) => {
               <Scan className="w-4 h-4 mr-3" />
               Scan Document
             </Button>
+
+            <Button variant="outline" className="w-full justify-start">
+              <Cloud className="w-4 h-4 mr-3" />
+              Import from Google Drive
+            </Button>
+
+            <Button variant="outline" className="w-full justify-start">
+              <Building2 className="w-4 h-4 mr-3" />
+              Import from iManage
+            </Button>
+
+            <Button variant="outline" className="w-full justify-start">
+              <Building2 className="w-4 h-4 mr-3" />
+              Import from NetDocuments
+            </Button>
           </div>
 
           {/* Quick Actions */}
@@ -79,6 +94,10 @@ const AddDocumentModal = ({ isOpen, onClose }: AddDocumentModalProps) => {
               </Button>
               <Button variant="ghost" size="sm" className="w-full justify-start text-sm">
                 Import from email
+              </Button>
+              <Button variant="ghost" size="sm" className="w-full justify-start text-sm">
+                <Link className="w-4 h-4 mr-2" />
+                Create upload link for clients
               </Button>
             </div>
           </div>

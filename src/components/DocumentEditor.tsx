@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, FileText, Clock, MessageSquare, X, Download, Share2, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, FileText, Clock, MessageSquare, X, Download, Share2, MoreHorizontal, TrendingUp, Mail, Link, Users, FileSignature } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface DocumentEditorProps {
   document: any;
@@ -28,10 +29,32 @@ const DocumentEditor = ({ document, onClose }: DocumentEditorProps) => {
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Link className="w-4 h-4 mr-2" />
+                Copy link
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Mail className="w-4 h-4 mr-2" />
+                Share via email
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileSignature className="w-4 h-4 mr-2" />
+                Request signatures
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Users className="w-4 h-4 mr-2" />
+                Request edit approval
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
             Download
@@ -131,6 +154,10 @@ const DocumentEditor = ({ document, onClose }: DocumentEditorProps) => {
               </Button>
               <Button variant="outline" size="sm" className="w-full justify-start text-left">
                 Flag unusual terms
+              </Button>
+              <Button variant="outline" size="sm" className="w-full justify-start text-left bg-blue-50 border-blue-200">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Legal Predictions
               </Button>
             </div>
             
