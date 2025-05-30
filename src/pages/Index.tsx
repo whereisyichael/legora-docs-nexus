@@ -188,7 +188,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <div className="px-2 py-2">
+          <div className="px-2 py-2 border-b">
             <Button 
               onClick={onAddDocument}
               className="w-full bg-green-600 hover:bg-green-700 text-white"
@@ -664,7 +664,7 @@ const Index = () => {
                     <Card key={doc.id} className="hover:shadow-md transition-all duration-200 cursor-pointer group">
                       <CardContent className="p-3">
                         <div 
-                          className="aspect-[3/4] bg-gray-100 rounded-lg mb-3 flex items-center justify-center cursor-pointer relative overflow-hidden"
+                          className="aspect-[3/4] bg-gray-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden"
                           onClick={() => handleDocumentSelect(doc)}
                         >
                           <div className="w-full h-full bg-white border shadow-sm flex flex-col p-2 text-xs">
