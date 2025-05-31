@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, File, Tag, Calendar, User, Download, FileText, Grid3X3, List, Folder, Settings, LogOut, ChevronDown, MessageSquare, Filter, X, Plus, Eye, AlertTriangle, Clock, Edit2, Check } from 'lucide-react';
+import { Search, File, Tag, Calendar, User, Download, FileText, Grid3X3, List, Folder, Settings, LogOut, ChevronDown, MessageSquare, Filter, X, Plus, Eye, AlertTriangle, Clock, Edit2, Check, Zap, Users, RotateCcw } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import DocumentEditor from '@/components/DocumentEditor';
 import AddDocumentModal from '@/components/AddDocumentModal';
 
@@ -26,7 +27,10 @@ const sampleDocuments = [
     folder: 'Clients/Summit Capital/Fund Formation',
     preview: '/placeholder.svg',
     expiryDate: '2024-12-31',
-    isExpiringSoon: true
+    isExpiringSoon: true,
+    accessGroups: ['Legal Team', 'Summit Capital Partners'],
+    downloadCount: 23,
+    isRecoverable: true
   },
   {
     id: 2,
@@ -41,7 +45,10 @@ const sampleDocuments = [
     folder: 'Clients/Apollo Ventures/Operating Agreements',
     preview: '/placeholder.svg',
     expiryDate: '2025-01-15',
-    isExpiringSoon: false
+    isExpiringSoon: false,
+    accessGroups: ['Legal Team', 'Apollo Ventures'],
+    downloadCount: 15,
+    isRecoverable: true
   },
   {
     id: 3,
@@ -56,7 +63,10 @@ const sampleDocuments = [
     folder: 'Clients/Horizon Investments',
     preview: '/placeholder.svg',
     expiryDate: '2024-11-30',
-    isExpiringSoon: true
+    isExpiringSoon: true,
+    accessGroups: ['Legal Team', 'Horizon Partners'],
+    downloadCount: 8,
+    isRecoverable: false
   },
   {
     id: 4,
@@ -71,7 +81,10 @@ const sampleDocuments = [
     folder: 'Clients/Equinox Capital/Fund Formation',
     preview: '/placeholder.svg',
     expiryDate: '2025-02-28',
-    isExpiringSoon: false
+    isExpiringSoon: false,
+    accessGroups: ['Legal Team', 'Equinox Capital'],
+    downloadCount: 31,
+    isRecoverable: true
   },
   {
     id: 5,
@@ -86,7 +99,10 @@ const sampleDocuments = [
     folder: 'Clients/VentureGate/LLC Agreements',
     preview: '/placeholder.svg',
     expiryDate: '2024-10-15',
-    isExpiringSoon: true
+    isExpiringSoon: true,
+    accessGroups: ['Legal Team', 'VentureGate Partners'],
+    downloadCount: 12,
+    isRecoverable: true
   },
   {
     id: 6,
@@ -101,7 +117,10 @@ const sampleDocuments = [
     folder: 'Templates/Employment Contracts',
     preview: '/placeholder.svg',
     expiryDate: '2025-03-31',
-    isExpiringSoon: false
+    isExpiringSoon: false,
+    accessGroups: ['Legal Team', 'HR Department'],
+    downloadCount: 45,
+    isRecoverable: true
   },
   {
     id: 7,
@@ -116,7 +135,10 @@ const sampleDocuments = [
     folder: 'Templates/Patent Applications',
     preview: '/placeholder.svg',
     expiryDate: '2024-09-30',
-    isExpiringSoon: true
+    isExpiringSoon: true,
+    accessGroups: ['Legal Team', 'IP Department'],
+    downloadCount: 7,
+    isRecoverable: true
   },
   {
     id: 8,
@@ -131,7 +153,10 @@ const sampleDocuments = [
     folder: 'Templates/NDAs',
     preview: '/placeholder.svg',
     expiryDate: '2025-04-30',
-    isExpiringSoon: false
+    isExpiringSoon: false,
+    accessGroups: ['Legal Team', 'Business Development'],
+    downloadCount: 19,
+    isRecoverable: true
   }
 ];
 
@@ -164,6 +189,17 @@ const folders = [
       { name: 'Patent Applications', count: 3 }
     ]
   }
+];
+
+const promptLibrary = [
+  "Find all contracts expiring in the next 30 days",
+  "Show documents with compliance issues",
+  "Extract key terms from partnership agreements", 
+  "Find similar clauses across all LPAs",
+  "Identify potential legal risks in recent documents",
+  "Compare profit-sharing structures across funds",
+  "List all documents requiring signature",
+  "Find documents with specific counterparties"
 ];
 
 const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
@@ -269,6 +305,59 @@ const DocumentAssistant = ({ isOpen, onClose, selectedDoc }: { isOpen: boolean; 
   );
 };
 
+const DocumentLifecyclePopover = ({ document }: { document: any }) => {
+  return (
+    <PopoverContent className="w-80 p-4">
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-medium text-sm mb-2">Document Lifecycle</h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Expiry Date:</span>
+              <span className={document.isExpiringSoon ? 'text-orange-600 font-medium' : 'text-gray-900'}>
+                {document.expiryDate}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Downloads:</span>
+              <span className="text-gray-900">{document.downloadCount} times</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Recoverable:</span>
+              <span className={document.isRecoverable ? 'text-green-600' : 'text-red-600'}>
+                {document.isRecoverable ? 'Yes' : 'No'}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h5 className="font-medium text-sm mb-2 flex items-center">
+            <Users className="w-4 h-4 mr-1" />
+            Access Groups
+          </h5>
+          <div className="flex flex-wrap gap-1">
+            {document.accessGroups.map((group: string, index: number) => (
+              <Badge key={index} variant="secondary" className="text-xs">
+                {group}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {document.isExpiringSoon && (
+          <Alert className="border-orange-200 bg-orange-50">
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <AlertDescription className="text-orange-800 text-xs">
+              This document expires soon. Consider renewal or archival.
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
+    </PopoverContent>
+  );
+};
+
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -367,6 +456,11 @@ const Index = () => {
     setFilteredDocuments(updatedDocs);
   };
 
+  const handlePromptSelect = (prompt: string) => {
+    setSearchQuery(prompt);
+    filterDocuments(prompt, selectedTags);
+  };
+
   if (showEditor && selectedDocument) {
     return <DocumentEditor document={selectedDocument} onClose={handleCloseEditor} />;
   }
@@ -445,6 +539,35 @@ const Index = () => {
               </div>
             </div>
 
+            {/* Prompt Library Row */}
+            <div className="mt-3 flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                    <Zap className="w-4 h-4" />
+                    <span>Prompt Library</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-80">
+                  <div className="px-3 py-2">
+                    <p className="font-medium text-sm">AI Legal Search Queries</p>
+                    <p className="text-xs text-gray-600">Quick prompts for common legal searches</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {promptLibrary.map((prompt, index) => (
+                    <DropdownMenuItem 
+                      key={index}
+                      className="cursor-pointer text-sm"
+                      onClick={() => handlePromptSelect(prompt)}
+                    >
+                      {prompt}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
             {/* Filter Row */}
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -520,7 +643,7 @@ const Index = () => {
         </div>
 
         {/* Content with top padding for fixed header */}
-        <div className="flex flex-1 pt-32">
+        <div className="flex flex-1 pt-44">
           <DocumentSidebar onAddDocument={() => setShowAddModal(true)} />
           
           <div className="flex-1 flex flex-col">
@@ -632,6 +755,19 @@ const Index = () => {
                           </div>
 
                           <div className="flex items-center space-x-2">
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Clock className="w-4 h-4 text-blue-600" />
+                                </Button>
+                              </PopoverTrigger>
+                              <DocumentLifecyclePopover document={doc} />
+                            </Popover>
                             <Button 
                               variant="ghost" 
                               size="sm" 
@@ -683,6 +819,19 @@ const Index = () => {
                           {doc.isExpiringSoon && (
                             <Clock className="absolute top-2 right-2 w-4 h-4 text-orange-500" />
                           )}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="absolute bottom-2 left-2 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Clock className="w-3 h-3 text-blue-600" />
+                              </Button>
+                            </PopoverTrigger>
+                            <DocumentLifecyclePopover document={doc} />
+                          </Popover>
                         </div>
                         <h3 className="font-medium text-sm truncate mb-1">{doc.name}</h3>
                         <p className="text-xs text-gray-600 truncate">{doc.type}</p>
