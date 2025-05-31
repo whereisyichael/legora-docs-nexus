@@ -222,7 +222,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
 
   return (
     <Sidebar>
-      <SidebarContent className="pt-32">
+      <SidebarContent className="pt-48">
         <SidebarGroup>
           <div className="px-2 py-2 border-b">
             <Button 
@@ -539,38 +539,35 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Prompt Library Row */}
-            <div className="mt-3 flex items-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                    <Zap className="w-4 h-4" />
-                    <span>Prompt Library</span>
-                    <ChevronDown className="w-3 h-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-80">
-                  <div className="px-3 py-2">
-                    <p className="font-medium text-sm">AI Legal Search Queries</p>
-                    <p className="text-xs text-gray-600">Quick prompts for common legal searches</p>
-                  </div>
-                  <DropdownMenuSeparator />
-                  {promptLibrary.map((prompt, index) => (
-                    <DropdownMenuItem 
-                      key={index}
-                      className="cursor-pointer text-sm"
-                      onClick={() => handlePromptSelect(prompt)}
-                    >
-                      {prompt}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Filter Row */}
+            {/* Filter Row with Prompt Library */}
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center space-x-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                      <Zap className="w-4 h-4" />
+                      <span>Prompt Library</span>
+                      <ChevronDown className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-80 bg-white z-50">
+                    <div className="px-3 py-2">
+                      <p className="font-medium text-sm">AI Legal Search Queries</p>
+                      <p className="text-xs text-gray-600">Quick prompts for common legal searches</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    {promptLibrary.map((prompt, index) => (
+                      <DropdownMenuItem 
+                        key={index}
+                        className="cursor-pointer text-sm"
+                        onClick={() => handlePromptSelect(prompt)}
+                      >
+                        {prompt}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -588,7 +585,7 @@ const Index = () => {
                     className="bg-green-600 hover:bg-green-700 cursor-pointer"
                     onClick={() => toggleTag(tag)}
                   >
-                    {tag}
+                    {tag.trim()}
                     <X className="w-3 h-3 ml-1" />
                   </Badge>
                 ))}
@@ -633,7 +630,7 @@ const Index = () => {
                       onClick={() => toggleTag(tag)}
                     >
                       <Tag className="w-3 h-3 mr-1" />
-                      {tag}
+                      {tag.trim()}
                     </Badge>
                   ))}
                 </div>
@@ -719,10 +716,10 @@ const Index = () => {
                                         className="text-xs cursor-pointer hover:bg-gray-200 relative"
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          setEditingTag({ docId: doc.id, tagIndex, value: tag });
+                                          setEditingTag({ docId: doc.id, tagIndex, value: tag.trim() });
                                         }}
                                       >
-                                        {tag}
+                                        {tag.trim()}
                                         <Button
                                           size="sm"
                                           variant="ghost"
@@ -745,7 +742,7 @@ const Index = () => {
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     const newTag = prompt('Enter new tag:');
-                                    if (newTag) handleTagAdd(doc.id, newTag);
+                                    if (newTag) handleTagAdd(doc.id, newTag.trim());
                                   }}
                                 >
                                   <Plus className="w-3 h-3" />
@@ -838,7 +835,7 @@ const Index = () => {
                         <div className="flex flex-wrap gap-1 mt-2">
                           {doc.tags.slice(0, 2).map((tag) => (
                             <Badge key={tag} variant="secondary" className="text-xs">
-                              {tag}
+                              {tag.trim()}
                             </Badge>
                           ))}
                         </div>
