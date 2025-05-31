@@ -222,7 +222,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
 
   return (
     <Sidebar>
-      <SidebarContent className="pt-48">
+      <SidebarContent className="pt-32">
         <SidebarGroup>
           <div className="px-2 py-2 border-b">
             <Button 
@@ -506,6 +506,35 @@ const Index = () => {
                     </Select>
                   </div>
                 </div>
+
+                {/* Prompt Library directly below search bar */}
+                <div className="mt-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                        <Zap className="w-4 h-4" />
+                        <span>Prompt Library</span>
+                        <ChevronDown className="w-3 h-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-80 bg-white z-50">
+                      <div className="px-3 py-2">
+                        <p className="font-medium text-sm">AI Legal Search Queries</p>
+                        <p className="text-xs text-gray-600">Quick prompts for common legal searches</p>
+                      </div>
+                      <DropdownMenuSeparator />
+                      {promptLibrary.map((prompt, index) => (
+                        <DropdownMenuItem 
+                          key={index}
+                          className="cursor-pointer text-sm"
+                          onClick={() => handlePromptSelect(prompt)}
+                        >
+                          {prompt}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
 
               <div className="flex items-center space-x-4">
@@ -539,35 +568,9 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Filter Row with Prompt Library */}
+            {/* Filter Row with Tags button to the left */}
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                      <Zap className="w-4 h-4" />
-                      <span>Prompt Library</span>
-                      <ChevronDown className="w-3 h-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-80 bg-white z-50">
-                    <div className="px-3 py-2">
-                      <p className="font-medium text-sm">AI Legal Search Queries</p>
-                      <p className="text-xs text-gray-600">Quick prompts for common legal searches</p>
-                    </div>
-                    <DropdownMenuSeparator />
-                    {promptLibrary.map((prompt, index) => (
-                      <DropdownMenuItem 
-                        key={index}
-                        className="cursor-pointer text-sm"
-                        onClick={() => handlePromptSelect(prompt)}
-                      >
-                        {prompt}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
                 <Button
                   variant="outline"
                   size="sm"
@@ -582,10 +585,10 @@ const Index = () => {
                   <Badge
                     key={tag}
                     variant="default"
-                    className="bg-green-600 hover:bg-green-700 cursor-pointer"
+                    className="bg-green-600 hover:bg-green-700 cursor-pointer text-center"
                     onClick={() => toggleTag(tag)}
                   >
-                    {tag.trim()}
+                    {tag}
                     <X className="w-3 h-3 ml-1" />
                   </Badge>
                 ))}
@@ -622,7 +625,7 @@ const Index = () => {
                     <Badge
                       key={tag}
                       variant={selectedTags.includes(tag) ? "default" : "outline"}
-                      className={`cursor-pointer ${
+                      className={`cursor-pointer text-center ${
                         selectedTags.includes(tag)
                           ? 'bg-green-600 hover:bg-green-700'
                           : 'hover:bg-green-50 hover:border-green-300'
@@ -630,7 +633,7 @@ const Index = () => {
                       onClick={() => toggleTag(tag)}
                     >
                       <Tag className="w-3 h-3 mr-1" />
-                      {tag.trim()}
+                      {tag}
                     </Badge>
                   ))}
                 </div>
@@ -639,8 +642,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Content with top padding for fixed header */}
-        <div className="flex flex-1 pt-44">
+        {/* Content with reduced top padding for fixed header */}
+        <div className="flex flex-1 pt-36">
           <DocumentSidebar onAddDocument={() => setShowAddModal(true)} />
           
           <div className="flex-1 flex flex-col">
@@ -713,13 +716,13 @@ const Index = () => {
                                     ) : (
                                       <Badge 
                                         variant="secondary" 
-                                        className="text-xs cursor-pointer hover:bg-gray-200 relative"
+                                        className="text-xs cursor-pointer hover:bg-gray-200 relative text-center"
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          setEditingTag({ docId: doc.id, tagIndex, value: tag.trim() });
+                                          setEditingTag({ docId: doc.id, tagIndex, value: tag });
                                         }}
                                       >
-                                        {tag.trim()}
+                                        {tag}
                                         <Button
                                           size="sm"
                                           variant="ghost"
@@ -834,8 +837,8 @@ const Index = () => {
                         <p className="text-xs text-gray-600 truncate">{doc.type}</p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {doc.tags.slice(0, 2).map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
-                              {tag.trim()}
+                            <Badge key={tag} variant="secondary" className="text-xs text-center">
+                              {tag}
                             </Badge>
                           ))}
                         </div>
