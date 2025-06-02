@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, File, Tag, Calendar, User, Download, FileText, Grid3X3, List, Folder, Settings, LogOut, ChevronDown, MessageSquare, Filter, X, Plus, Eye, AlertTriangle, Clock, Edit2, Check, Zap, Users, RotateCcw } from 'lucide-react';
+import { Search, File, Tag, Calendar, User, Download, FileText, Grid3X3, List, Folder, Settings, LogOut, ChevronDown, MessageSquare, Filter, X, Plus, Eye, AlertTriangle, Clock, Edit2, Check, Zap, Users, RotateCcw, UserCircle, TrendingUp, Mail, Link, FileSignature } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ const sampleDocuments = [
     type: 'Limited Partnership Agreement',
     size: '2.4 MB',
     lastModified: '2024-05-28',
-    tags: ['contract', 'partnership', 'investment', 'LPA'],
+    tags: ['contract', 'partnership', 'investment', 'LPA', '80% chance of success'],
     ownershipDist: '20% GP / 80% LP',
     decisionMech: 'Majority LP vote',
     profitSharing: '80/20',
@@ -30,7 +30,13 @@ const sampleDocuments = [
     isExpiringSoon: true,
     accessGroups: ['Legal Team', 'Summit Capital Partners'],
     downloadCount: 23,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'John Smith', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face', isOwner: true },
+      { name: 'Sarah Johnson', avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face', isOwner: false }
+    ],
+    status: 'ready to sign',
+    aiSuggestion: 'send to client for signature'
   },
   {
     id: 2,
@@ -38,7 +44,7 @@ const sampleDocuments = [
     type: 'LLC Operating Agreement',
     size: '1.8 MB',
     lastModified: '2024-05-27',
-    tags: ['agreement', 'LLC', 'operating', 'business'],
+    tags: ['agreement', 'LLC', 'operating', 'business', 'Found in email'],
     ownershipDist: '15% GP / 85% LP',
     decisionMech: 'GP sole discretion',
     profitSharing: '75/20',
@@ -48,7 +54,13 @@ const sampleDocuments = [
     isExpiringSoon: false,
     accessGroups: ['Legal Team', 'Apollo Ventures'],
     downloadCount: 15,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'Mike Chen', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face', isOwner: true },
+      { name: 'Lisa Brown', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face', isOwner: false }
+    ],
+    status: 'discussed in Apollo Ventures Monday meeting',
+    aiSuggestion: 'discussed in Apollo Ventures Monday meeting'
   },
   {
     id: 3,
@@ -66,7 +78,12 @@ const sampleDocuments = [
     isExpiringSoon: true,
     accessGroups: ['Legal Team', 'Horizon Partners'],
     downloadCount: 8,
-    isRecoverable: false
+    isRecoverable: false,
+    people: [
+      { name: 'David Wilson', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face', isOwner: true }
+    ],
+    status: 'new document',
+    aiSuggestion: '1 week since last client response: next step in negotiation playbook'
   },
   {
     id: 4,
@@ -84,7 +101,13 @@ const sampleDocuments = [
     isExpiringSoon: false,
     accessGroups: ['Legal Team', 'Equinox Capital'],
     downloadCount: 31,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'Emily Davis', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face', isOwner: true },
+      { name: 'Tom Anderson', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face', isOwner: false }
+    ],
+    status: 'ready to send',
+    aiSuggestion: 'send to client for signature'
   },
   {
     id: 5,
@@ -102,7 +125,12 @@ const sampleDocuments = [
     isExpiringSoon: true,
     accessGroups: ['Legal Team', 'VentureGate Partners'],
     downloadCount: 12,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'Rachel Green', avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face', isOwner: true }
+    ],
+    status: 'new document',
+    aiSuggestion: 'send to client for signature'
   },
   {
     id: 6,
@@ -120,7 +148,12 @@ const sampleDocuments = [
     isExpiringSoon: false,
     accessGroups: ['Legal Team', 'HR Department'],
     downloadCount: 45,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'HR Manager', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face', isOwner: true }
+    ],
+    status: 'ready to sign',
+    aiSuggestion: 'send to client for signature'
   },
   {
     id: 7,
@@ -128,7 +161,7 @@ const sampleDocuments = [
     type: 'Patent Filing',
     size: '4.2 MB',
     lastModified: '2024-05-22',
-    tags: ['patent', 'intellectual-property', 'AI', 'technology'],
+    tags: ['patent', 'intellectual-property', 'AI', 'technology', '80% chance of success'],
     ownershipDist: 'Company owned',
     decisionMech: 'Board approval',
     profitSharing: 'Royalty based',
@@ -138,7 +171,12 @@ const sampleDocuments = [
     isExpiringSoon: true,
     accessGroups: ['Legal Team', 'IP Department'],
     downloadCount: 7,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'IP Attorney', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face', isOwner: true }
+    ],
+    status: 'ready to send',
+    aiSuggestion: 'send to client for signature'
   },
   {
     id: 8,
@@ -146,7 +184,7 @@ const sampleDocuments = [
     type: 'Non-Disclosure Agreement',
     size: '0.8 MB',
     lastModified: '2024-05-21',
-    tags: ['NDA', 'confidentiality', 'partnership', 'technology'],
+    tags: ['NDA', 'confidentiality', 'partnership', 'technology', 'Found in email'],
     ownershipDist: 'Mutual',
     decisionMech: 'Bilateral consent',
     profitSharing: 'N/A',
@@ -156,7 +194,36 @@ const sampleDocuments = [
     isExpiringSoon: false,
     accessGroups: ['Legal Team', 'Business Development'],
     downloadCount: 19,
-    isRecoverable: true
+    isRecoverable: true,
+    people: [
+      { name: 'Legal Counsel', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face', isOwner: true }
+    ],
+    status: 'new document',
+    aiSuggestion: 'send to client for signature'
+  },
+  {
+    id: 9,
+    name: 'Merger_Agreement_Westlaw.pdf',
+    type: 'Merger Agreement',
+    size: '5.1 MB',
+    lastModified: '2024-05-20',
+    tags: ['merger', 'acquisition', 'corporate', 'Westlaw'],
+    ownershipDist: '50/50 equity split',
+    decisionMech: 'Board approval required',
+    profitSharing: 'Equal distribution',
+    folder: 'Clients/Corporate M&A',
+    preview: '/placeholder.svg',
+    expiryDate: '2024-08-15',
+    isExpiringSoon: true,
+    accessGroups: ['Legal Team', 'Corporate M&A'],
+    downloadCount: 34,
+    isRecoverable: true,
+    people: [
+      { name: 'M&A Partner', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face', isOwner: true },
+      { name: 'Client Rep', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face', isOwner: false }
+    ],
+    status: 'ready to sign',
+    aiSuggestion: 'send to client for signature'
   }
 ];
 
@@ -222,7 +289,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
 
   return (
     <Sidebar>
-      <SidebarContent className="pt-32">
+      <SidebarContent className="pt-40">
         <SidebarGroup>
           <div className="px-2 py-2 border-b">
             <Button 
@@ -231,7 +298,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
               size="sm"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add New Document
+              New Document
             </Button>
           </div>
           <SidebarGroupLabel>Document Folders</SidebarGroupLabel>
@@ -248,6 +315,7 @@ const DocumentSidebar = ({ onAddDocument }: { onAddDocument: () => void }) => {
 
 const DocumentAssistant = ({ isOpen, onClose, selectedDoc }: { isOpen: boolean; onClose: () => void; selectedDoc?: any }) => {
   const [message, setMessage] = useState('');
+  const [showLegalPredictions, setShowLegalPredictions] = useState(false);
   
   if (!isOpen) return null;
 
@@ -272,6 +340,10 @@ const DocumentAssistant = ({ isOpen, onClose, selectedDoc }: { isOpen: boolean; 
       
       <div className="flex-1 p-4">
         <div className="space-y-3 mb-4">
+          <Button variant="outline" size="sm" className="w-full justify-start text-left bg-blue-50 border-blue-200">
+            <Zap className="w-4 h-4 mr-2" />
+            AI Suggestion: {selectedDoc?.aiSuggestion || 'Analyze document'}
+          </Button>
           <Button variant="outline" size="sm" className="w-full justify-start text-left">
             Summarize this document
           </Button>
@@ -284,9 +356,39 @@ const DocumentAssistant = ({ isOpen, onClose, selectedDoc }: { isOpen: boolean; 
           <Button variant="outline" size="sm" className="w-full justify-start text-left">
             Suggest legal edits
           </Button>
-          <Button variant="outline" size="sm" className="w-full justify-start text-left bg-blue-50 border-blue-200">
-            Legal Predictions & Analysis
-          </Button>
+          <Popover open={showLegalPredictions} onOpenChange={setShowLegalPredictions}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-start text-left bg-purple-50 border-purple-200">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Legal Predictions & Analysis
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72" align="start">
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm">Legal Predictions</h4>
+                <div className="space-y-2">
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    85% likelihood of winning case
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    Estimated case value: $2.4M
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    Est. lawyer time: 120 hours
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    Settlement probability: 65%
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    Risk assessment score
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full justify-start text-left">
+                    Precedent case analysis
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         
         <div className="space-y-2">
@@ -472,7 +574,7 @@ const Index = () => {
       <div className="min-h-screen flex w-full bg-gray-50">
         {/* Full Width Header */}
         <div className="fixed top-0 left-0 right-0 bg-white border-b z-50">
-          <div className="px-6 py-3">
+          <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <SidebarTrigger />
@@ -486,10 +588,10 @@ const Index = () => {
 
               <div className="flex-1 max-w-2xl mx-8">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <Input
                     placeholder="What are you looking for?"
-                    className="pl-10 h-10 text-base"
+                    className="pl-12 h-12 text-lg font-medium border-2 border-gray-300 focus:border-green-500 shadow-sm"
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
                   />
@@ -507,8 +609,8 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Prompt Library directly below search bar */}
-                <div className="mt-2">
+                {/* Buttons directly below search bar */}
+                <div className="mt-3 flex items-center space-x-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="flex items-center space-x-2">
@@ -534,6 +636,28 @@ const Index = () => {
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowTagFilter(!showTagFilter)}
+                    className={selectedTags.length > 0 ? 'bg-green-50 border-green-300' : ''}
+                  >
+                    <Filter className="w-4 h-4 mr-2" />
+                    Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
+                  </Button>
+                  
+                  {selectedTags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="default"
+                      className="bg-green-600 hover:bg-green-700 cursor-pointer"
+                      onClick={() => toggleTag(tag)}
+                    >
+                      {tag}
+                      <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                  ))}
                 </div>
               </div>
 
@@ -568,30 +692,10 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Filter Row with Tags button to the left */}
+            {/* Filter Row */}
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowTagFilter(!showTagFilter)}
-                  className={selectedTags.length > 0 ? 'bg-green-50 border-green-300' : ''}
-                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
-                </Button>
-                
-                {selectedTags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="default"
-                    className="bg-green-600 hover:bg-green-700 cursor-pointer text-center"
-                    onClick={() => toggleTag(tag)}
-                  >
-                    {tag}
-                    <X className="w-3 h-3 ml-1" />
-                  </Badge>
-                ))}
+                {/* This space can be used for additional filters if needed */}
               </div>
 
               <div className="flex items-center space-x-2">
@@ -625,7 +729,7 @@ const Index = () => {
                     <Badge
                       key={tag}
                       variant={selectedTags.includes(tag) ? "default" : "outline"}
-                      className={`cursor-pointer text-center ${
+                      className={`cursor-pointer ${
                         selectedTags.includes(tag)
                           ? 'bg-green-600 hover:bg-green-700'
                           : 'hover:bg-green-50 hover:border-green-300'
@@ -643,7 +747,7 @@ const Index = () => {
         </div>
 
         {/* Content with reduced top padding for fixed header */}
-        <div className="flex flex-1 pt-36">
+        <div className="flex flex-1 pt-44">
           <DocumentSidebar onAddDocument={() => setShowAddModal(true)} />
           
           <div className="flex-1 flex flex-col">
@@ -680,9 +784,31 @@ const Index = () => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center space-x-2 mb-1">
                                 <h3 className="font-medium text-gray-900 truncate">{doc.name}</h3>
-                                {doc.isExpiringSoon && (
-                                  <Clock className="w-4 h-4 text-orange-500" />
-                                )}
+                                
+                                {/* People icons */}
+                                <div className="flex -space-x-1">
+                                  {doc.people.map((person, personIndex) => (
+                                    <Avatar 
+                                      key={personIndex} 
+                                      className={`w-6 h-6 border-2 ${person.isOwner ? 'border-black' : 'border-white'}`}
+                                    >
+                                      <AvatarImage src={person.avatar} />
+                                      <AvatarFallback className="text-xs">{person.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                    </Avatar>
+                                  ))}
+                                </div>
+
+                                {/* Status badge */}
+                                <Badge 
+                                  variant="secondary" 
+                                  className={`text-xs ${
+                                    doc.status === 'ready to sign' ? 'bg-green-100 text-green-800' :
+                                    doc.status === 'new document' ? 'bg-blue-100 text-blue-800' :
+                                    'bg-gray-100 text-gray-800'
+                                  }`}
+                                >
+                                  {doc.status}
+                                </Badge>
                               </div>
                               
                               <div className="flex flex-wrap gap-1 mb-2">
@@ -715,8 +841,18 @@ const Index = () => {
                                       </div>
                                     ) : (
                                       <Badge 
-                                        variant="secondary" 
-                                        className="text-xs cursor-pointer hover:bg-gray-200 relative text-center"
+                                        variant={
+                                          tag === '80% chance of success' ? 'default' :
+                                          tag === 'Westlaw' ? 'default' :
+                                          tag === 'Found in email' ? 'default' :
+                                          'secondary'
+                                        }
+                                        className={`text-xs cursor-pointer hover:bg-gray-200 relative ${
+                                          tag === '80% chance of success' ? 'bg-purple-600 hover:bg-purple-700 text-white' :
+                                          tag === 'Westlaw' ? 'bg-blue-600 hover:bg-blue-700 text-white' :
+                                          tag === 'Found in email' ? 'bg-orange-600 hover:bg-orange-700 text-white' :
+                                          ''
+                                        }`}
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setEditingTag({ docId: doc.id, tagIndex, value: tag });
@@ -760,10 +896,10 @@ const Index = () => {
                                 <Button 
                                   variant="ghost" 
                                   size="sm" 
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  className="text-black hover:bg-gray-100"
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  <Clock className="w-4 h-4 text-blue-600" />
+                                  <Clock className={`w-4 h-4 ${doc.isExpiringSoon ? 'text-red-600' : 'text-black'}`} />
                                 </Button>
                               </PopoverTrigger>
                               <DocumentLifecyclePopover document={doc} />
@@ -771,12 +907,16 @@ const Index = () => {
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="text-black hover:bg-gray-100"
                               onClick={() => handleOpenDocument(doc)}
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-black hover:bg-gray-100"
+                            >
                               <Download className="w-4 h-4" />
                             </Button>
                             <div className="hidden md:flex items-center space-x-6 text-sm text-gray-600">
