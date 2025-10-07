@@ -15,7 +15,6 @@ const Settings = () => {
   const [email, setEmail] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     loadProfile();
@@ -23,26 +22,13 @@ const Settings = () => {
 
   const loadProfile = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          title: "Not authenticated",
-          description: "Please log in to view settings.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setUserId(user.id);
-
       const { data: profile, error } = await supabase
-        .from('profiles')
+        .from('Users')
         .select('name, email')
-        .eq('id', user.id)
-        .single();
+        .eq('id', 1)
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error loading profile:', error);
         toast({
           title: "Error loading profile",
@@ -61,25 +47,15 @@ const Settings = () => {
   };
 
   const handleSave = async () => {
-    if (!userId) {
-      toast({
-        title: "Error",
-        description: "User not authenticated.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSaving(true);
     
     try {
       const { error } = await supabase
-        .from('profiles')
+        .from('Users')
         .upsert({
-          id: userId,
+          id: 1,
           name,
           email,
-          updated_at: new Date().toISOString(),
         });
 
       if (error) throw error;
