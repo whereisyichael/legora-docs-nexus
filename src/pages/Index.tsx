@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, File, Tag, Calendar, User, Download, FileText, Grid3X3, List, Folder, Settings, LogOut, ChevronDown, MessageSquare, Filter, X, Plus, Eye, AlertTriangle, Clock, Edit2, Check, Zap, Users, RotateCcw, UserCircle, TrendingUp, Mail, Link, FileSignature } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -461,6 +462,7 @@ const DocumentLifecyclePopover = ({ document }: { document: any }) => {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [filteredDocuments, setFilteredDocuments] = useState(sampleDocuments);
@@ -672,18 +674,18 @@ const Index = () => {
                       <ChevronDown className="w-3 h-3" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-56 bg-white z-50">
                     <div className="px-3 py-2">
                       <p className="font-medium">John Doe</p>
                       <p className="text-sm text-gray-600">Senior Associate</p>
                       <p className="text-xs text-gray-500">Admin Access</p>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
                       <Settings className="w-4 h-4 mr-2" />
                       Settings
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
                       <LogOut className="w-4 h-4 mr-2" />
                       Log out
                     </DropdownMenuItem>
